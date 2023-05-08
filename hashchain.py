@@ -40,7 +40,3 @@ def generate_hash_chain(seed: int, length=1000):
     }, indent=2)
     with open(os.path.join(get_client_store(), "chain.json"), "w") as outfile:
         outfile.write(json_object)
-
-
-# generate_hash_chain(123)
-# print(get_next())
