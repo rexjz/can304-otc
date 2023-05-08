@@ -1,6 +1,8 @@
 import hashlib
 import json
 import os.path
+import sys
+from random import random
 
 client_store = './client_store/'
 
@@ -40,3 +42,7 @@ def generate_hash_chain(seed: int, length=1000):
     }, indent=2)
     with open(os.path.join(get_client_store(), "chain.json"), "w") as outfile:
         outfile.write(json_object)
+
+
+def getSeed():
+    return int(random() * sys.maxsize)

@@ -32,6 +32,7 @@ def verify_otc(user_name, otc):
         last_otc = otc_dict[user_name]
         hl = hashlib.md5()
         hl.update(otc.encode('utf-8'))
+        logging.info('last otc: ' + last_otc)
         if last_otc == str(hl.hexdigest()):
             return True
         else:

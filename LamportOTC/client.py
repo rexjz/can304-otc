@@ -1,7 +1,7 @@
 import http.client
 import json
 
-from hashchain import get_next, generate_hash_chain
+from hashchain import get_next, generate_hash_chain, getSeed
 
 h1 = http.client.HTTPConnection('127.0.0.1:8080')
 
@@ -23,7 +23,7 @@ def login():
     usr = input()
     print("password:")
     pwd = input()
-    generate_hash_chain(123)
+    generate_hash_chain(getSeed())
     headers = {
         "OTC": get_next()
     }
