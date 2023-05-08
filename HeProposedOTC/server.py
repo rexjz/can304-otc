@@ -6,6 +6,22 @@ import os
 import hashlib
 
 
+def get_bytes_md5(bytes):
+    md5 = hashlib.md5()
+    md5.update(bytes)
+    return md5.hexdigest()
+
+
+def get_str_md5(str):
+    md5 = hashlib.md5()
+    md5.update(str.encode('utf-8'))
+    return md5.hexdigest()
+
+
+def int_to_byte(value):
+    digit = math.ceil(value.bit_length() / 8)
+    return value.to_bytes(digit, 'big')
+
 client_store = './server_store/'
 
 
@@ -28,14 +44,12 @@ def save_otc(user_name, otc):
         logging.info("otc saved")
 
 
-def verify_otc(user_name, otc):
+
+def verify_otc(user_name, x, y):
     with open(os.path.join(get_server_store(), "otc.json"), "r") as file:
         otc_dict = json.loads(file.read())
-        last_otc = otc_dict[user_name]
-        hl = hashlib.md5()
-        hl.update(otc.encode('utf-8'))
-        logging.info('last otc: ' + last_otc)
-        if last_otc == str(hl.hexdigest()):
+        last_x = otc_dict[user_name]
+        if y == get_bytes_md5(int_to_byte(int(last_x, 16) | int(x, 16))):
             return True
         else:
             return False
@@ -53,8 +67,10 @@ class MyRequestHandler(BaseHTTPRequestHandler):
         self._set_response()
         self.wfile.write("GET request for {}".format(self.path).encode('utf-8'))
         otc = self.headers['OTC']
-        logging.info("otc verification: " + str(verify_otc("admin", otc)))
-        save_otc("admin", otc)
+        otc_fields = otc.split(";")
+        logging.info("otc verification: " + str(verify_otc(otc_fields[0], otc_fields[1], otc_fields[2])))
+        save_otc(otc_fields[0], otc_fields[1])
+
 
     def do_POST(self):
         logging.info('POST')
@@ -63,7 +79,8 @@ class MyRequestHandler(BaseHTTPRequestHandler):
         post_data = self.rfile.read(content_length)
         user_info = json.loads(post_data)
         user_name = user_info['UserName']
-        save_otc(user_name, otc)
+        otc_fields = otc.split(";")
+        save_otc(otc_fields[0], otc_fields[1])
         logging.info(json.loads(post_data))
         self._set_response()
         self.wfile.write("POST request for {}".format(self.path).encode('utf-8'))

@@ -51,16 +51,5 @@ def login():
     print(response.read())
 
 
-# login()
-# service()
-
-def service2():
-    while True:
-        print("Enter message:")
-        x = input()
-        h1.request(method='GET', url='/', body=x, headers={
-            "OTC": get_next_OTC()
-        })
-        response = h1.getresponse()
-        print('response from server:')
-        print(response.read())
+login()
+service()
