@@ -10,11 +10,12 @@ def service():
     while True:
         print("Enter message:")
         x = input()
-        h1.putheader("cookie", get_next())
-        h1.request(method='GET', url='/', body=x, headers={})
+        h1.request(method='GET', url='/', body=x, headers={
+            "OTC": get_next()
+        })
         response = h1.getresponse()
         print('response from server:')
-        print(response.headers)
+        print(response.read())
 
 
 def login():
@@ -42,4 +43,4 @@ def login():
 
 
 login()
-# service()
+service()
