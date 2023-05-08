@@ -42,5 +42,5 @@ def generate_hash_chain(seed: int, length=1000):
         outfile.write(json_object)
 
 
-generate_hash_chain(123)
+# generate_hash_chain(123)
 # print(get_next())
